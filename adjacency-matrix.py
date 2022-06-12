@@ -1,29 +1,25 @@
-# graph = [
-# [0,3,3,INF], 
-# [INF,0,5,8], 
-# [INF,5,0,1], 
-# [INF,INF,INF,0]
-# ]
-# INF = float("inf")
+graph = []
 
 
-
-
-def adjacency_matrix(n):
-  graph = []
+def createGraph(n):
   for i in range(n):
     graph.append([])
     for j in range(n):
-      cost = input(f"Enter the path cost for node {i} -> {j}: ")
+      if i != j:
+        cost = float(input(f"Enter the path cost for node {i} -> {j}: "))
+      else:
+        cost = 0
       graph[i].append(cost)
-  print(graph)    
 
 
 
 
 def main():
   nodes = int(input("Enter the number of nodes from 3 to 10: "))
-  adjacency_matrix(nodes)
+  createGraph(nodes)
+  print(graph)   
+
+
 
 
 if __name__ == "__main__":
