@@ -1,21 +1,10 @@
-graph = []
-dist = []
-
-def createGraph(n):
-  for i in range(n):
-    graph.append([])
-    for j in range(n):
-      if i != j:
-        cost = float(input(f"Enter the path cost for node {i} -> {j}: "))
-      else:
-        cost = 0
-      graph[i].append(cost)
-
-def shortDist(graph):
+def copyGraph(graph):
+  new_graph = []
   for i in range(len(graph)):
-    dist.append([])
+    new_graph.append([])
     for j in range(len(graph)):
-      dist[i].append(graph[i][j])
+      new_graph[i].append(graph[i][j])
+  return new_graph
 
 
 def floydWarshall(dist):
@@ -24,16 +13,23 @@ def floydWarshall(dist):
       for j in range(len(dist)):
         if dist[i][k] + dist[k][j] < dist[i][j]:
           dist[i][j] = dist[i][k] + dist[k][j]
+  return dist
 
 
 def main():
+  graph = []
   nodes = int(input("Enter the number of nodes from 3 to 10: "))
-  createGraph(nodes)
-  shortDist(graph)
-  floydWarshall(dist)
-  print(dist)
-
-
+  for i in range(nodes):
+    graph.append([])
+    for j in range(nodes):
+      if i != j:
+        cost = float(input(f"Enter the path cost for node {i} -> {j}: "))
+      else:
+        print(f"The path from node {i} -> {j} is always 0")
+        cost = 0
+      graph[i].append(cost)
+  dist = copyGraph(graph)
+  print(floydWarshall(dist))
 
 
 if __name__ == "__main__":
