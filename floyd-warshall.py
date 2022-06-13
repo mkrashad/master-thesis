@@ -1,3 +1,5 @@
+from datetime import datetime
+
 def copyGraph(graph):
   new_graph = []
   for i in range(len(graph)):
@@ -29,7 +31,10 @@ def main():
         cost = 0
       graph[i].append(cost)
   dist = copyGraph(graph)
+  start_time = datetime.now()
   print(floydWarshall(dist))
+  print(f"Time taken: {datetime.now() - start_time}")
+
 
 
 if __name__ == "__main__":
