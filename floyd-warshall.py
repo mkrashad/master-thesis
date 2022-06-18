@@ -18,6 +18,18 @@ def floydWarshall(dist):
   return dist
 
 
+
+def printGraph(solution):
+  print("Following matrix shows the shortest distances between every pair of vertices \n")
+  for i in range(len(solution)):
+    for j in range(len(solution)):
+      if solution[i][j] != float('inf'):
+        print('\t', int(solution[i][j]), end=' ')
+      else:
+        print('\t', solution[i][j], end=' ')
+    print('\n')
+
+
 def main():
   graph = []
   nodes = int(input("Enter the number of nodes from 3 to 10: "))
@@ -31,9 +43,12 @@ def main():
         cost = 0
       graph[i].append(cost)
   dist = copyGraph(graph)
-  start_time = datetime.now()
-  print(floydWarshall(dist))
-  print(f"Time taken: {datetime.now() - start_time}")
+  solution = floydWarshall(dist)
+  printGraph(solution)
+
+
+  # start_time = datetime.now()
+  # print(f"Time taken: {datetime.now() - start_time}")
 
 
 
