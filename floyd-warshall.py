@@ -1,14 +1,3 @@
-from datetime import datetime
-
-def copyGraph(graph):
-  new_graph = []
-  for i in range(len(graph)):
-    new_graph.append([])
-    for j in range(len(graph)):
-      new_graph[i].append(graph[i][j])
-  return new_graph
-
-
 def floydWarshall(dist):
   for k in range(len(dist)):
     for i in range(len(dist)):
@@ -42,14 +31,9 @@ def main():
         print(f"The path from node {i} -> {j} is always 0")
         cost = 0
       graph[i].append(cost)
-  dist = copyGraph(graph)
-  solution = floydWarshall(dist)
+  # graph = [[0,3,5,float('inf')], [4,0,7,4], [6,3,0,5], [float('inf'),6,3,0]]
+  solution = floydWarshall(graph)
   printGraph(solution)
-
-
-  # start_time = datetime.now()
-  # print(f"Time taken: {datetime.now() - start_time}")
-
 
 
 if __name__ == "__main__":
