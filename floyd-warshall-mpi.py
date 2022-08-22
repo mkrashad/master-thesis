@@ -9,7 +9,7 @@ size = comm.size
 
 def convertTextToArray():
     graph = []
-    with open('./graph.txt', 'r') as file:
+    with open('examples/graph-4.2.txt', 'r') as file:
         for line in file:
             graph.append([int(i) for i in line.split()])
     return graph
@@ -42,15 +42,9 @@ def floydWarshallMPI(dist):
 def main():
     matrix_before = convertTextToArray()
     start_time = timeit.default_timer()
-    # print(
-    #     f'Matrix before Floyd Warshall algorithm\n {matrix_before}\n\n')
-    matrix_after = matrix_before
     matrix_after = floydWarshallMPI(matrix_before)
-    # print(
-    #     f'Following matrix shows the shortest distances between every pair of vertices:\n\n {matrix_after}')
     stop_time = timeit.default_timer()
-
-    out_file = open('result.txt', 'w')
+    out_file = open('results/result-mpi.txt', 'w')
     print(matrix_after, file=out_file)
     print(f'Thread {rank}\nTime takes: {stop_time - start_time}\n')
 
