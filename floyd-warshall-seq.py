@@ -3,21 +3,22 @@ import timeit
 
 def convertTextToArray():
     graph = []
-    with open('examples/graph-4.2.txt', 'r') as file:
+    with open('examples/graph-4.txt', 'r') as file:
         for line in file:
             graph.append([int(i) for i in line.split()])
     return graph
 
 
 def floydWarshall(dist):
+    graphLength = len(dist)
     out_file = open('results/result-seq.txt', 'w')
-    for k in range(len(dist)):
-        for i in range(len(dist)):
-            for j in range(len(dist)):
+    for k in range(graphLength):
+        for i in range(graphLength):
+            for j in range(graphLength):
                 if dist[i][k] + dist[k][j] < dist[i][j]:
                     dist[i][j] = dist[i][k] + dist[k][j]
-    matrix_after = dist
-    print(matrix_after, file=out_file)
+    print(dist)
+    print(dist, file=out_file)
 
 
 def main():

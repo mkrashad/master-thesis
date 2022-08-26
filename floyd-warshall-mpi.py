@@ -16,21 +16,22 @@ def convertTextToArray():
 
 
 def floydWarshallMPI(dist):
+    graphLength = len(dist)
     out_file = open('results/result-mpi.txt', 'w')
-    rowsPerThread = len(dist) / size
-    threadsPerRow = size / len(dist)
+    rowsPerThread = graphLength / size
+    threadsPerRow = size / graphLength
 
     startRow = int(rowsPerThread * rank)
     endRow = int(rowsPerThread * (rank + 1))
-    for k in range(len(dist)):
+    for k in range(graphLength):
         owner = threadsPerRow*k
         dist[k] = comm.bcast(dist[k], root=owner)
         for i in range(startRow, endRow):
-            for j in range(len(dist)):
+            for j in range(graphLength):
                 if dist[i][k] + dist[k][j] < dist[i][j]:
                     dist[i][j] = dist[i][k] + dist[k][j]
     if rank == 0:
-        for k in range(endRow, len(dist)):
+        for k in range(endRow, graphLength):
             owner = int(threadsPerRow*k)
             dist[k] = comm.recv(source=owner, tag=k)
         print(dist, file=out_file)
