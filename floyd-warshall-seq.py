@@ -11,7 +11,7 @@ def convertTextToArray():
 
 def floydWarshall(dist):
     graphLength = len(dist)
-    out_file = open('results/result-seq.txt', 'w')
+    out_file = open('results/floyd-seq-result.txt', 'w')
     for k in range(graphLength):
         for i in range(graphLength):
             for j in range(graphLength):

@@ -17,7 +17,7 @@ def convertTextToArray():
 
 def floydWarshallMPI(dist):
     graphLength = len(dist)
-    out_file = open('results/result-mpi.txt', 'w')
+    out_file = open('results/floyd-mpi-result.txt', 'w')
     rowsPerThread = graphLength / size
     threadsPerRow = size / graphLength
 

@@ -23,7 +23,7 @@ def findMinDistance(distance, visitedVertex):
 
 
 def dijkstra(graph, source):
-    out_file = open('results/dijkstra-result-seq.txt', 'w')
+    out_file = open('results/dijkstra-seq-result.txt', 'w')
     graphLength = len(graph)
     visitedVertex = [bool(i) for i in range(graphLength)]
     distance = [int(i) for i in range(graphLength)]
