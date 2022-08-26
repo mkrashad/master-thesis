@@ -45,7 +45,11 @@ def main():
     start_time = timeit.default_timer()
     floydWarshallMPI(matrix)
     stop_time = timeit.default_timer()
-    print(f'Thread {rank}\nTime takes: {stop_time - start_time}\n')
+    time_per_thread = stop_time - start_time
+    print(f'Thread {rank}\nTime takes: {time_per_thread}\n')
+    totalTime = comm.gather(time_per_thread, root=0)
+    if rank == 0:
+        print('Maximum time takes: ', max(totalTime))
 
 
 if __name__ == "__main__":
