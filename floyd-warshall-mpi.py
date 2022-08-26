@@ -16,6 +16,7 @@ def convertTextToArray():
 
 
 def floydWarshallMPI(dist):
+    out_file = open('results/result-mpi.txt', 'w')
     rowsPerThread = len(dist) / size
     threadsPerRow = size / len(dist)
 
@@ -32,20 +33,17 @@ def floydWarshallMPI(dist):
         for k in range(endRow, len(dist)):
             owner = int(threadsPerRow*k)
             dist[k] = comm.recv(source=owner, tag=k)
+        print(dist, file=out_file)
     else:
         for k in range(startRow, endRow):
             comm.send(dist[k], dest=0, tag=k)
 
-    return dist
-
 
 def main():
-    matrix_before = convertTextToArray()
+    matrix = convertTextToArray()
     start_time = timeit.default_timer()
-    matrix_after = floydWarshallMPI(matrix_before)
+    floydWarshallMPI(matrix)
     stop_time = timeit.default_timer()
-    out_file = open('results/result-mpi.txt', 'w')
-    print(matrix_after, file=out_file)
     print(f'Thread {rank}\nTime takes: {stop_time - start_time}\n')
 
 
