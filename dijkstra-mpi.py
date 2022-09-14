@@ -1,4 +1,4 @@
-from asyncio import gather
+from unittest import result
 from mpi4py import MPI
 
 # Global variables
@@ -8,7 +8,7 @@ rank = comm.rank
 size = comm.size
 
 
-graph = [
+matrix = [
     [0, 4, 1, 3],
     [999999,  0,  999999,  999999],
     [999999, 2, 0, 1],
@@ -16,48 +16,67 @@ graph = [
 ]
 
 
-def findMinDistance(val):
-    new_dict = {key: val for key,
-                val in val.items() if val != 0}
+def combine_with_nodes(val):
+    newArr = []
+    nodes = [i for i in range(len(val[0]))]
+    for i in range(len(val)):
+        newArr.append(dict(zip(nodes, val[i])))
+    return newArr
 
-    temp = min(new_dict.values())
 
-    res = {key: val for key,
-           val in val.items() if val == temp}
+def divide_graph(val, start, end):
+    part = []
+    for i in range(len(val)):
+        part.append(dict(list(val[i].items())[start:end]))
+    return part
 
+
+def find_local_min(graph):
+    min_value = None
+    remove_zero = {}
+    new_arr = {}
+    for key, value in graph.items():
+        if value != 0:
+            remove_zero.update({key: value})
+            min_value = min(remove_zero.values())
+            if value == min_value:
+                new_arr.update({key: value})
+    return new_arr
+
+
+def find_global_min(graph):
+    for i in range(len(graph)):
+        temp = min(graph[i].values())
+        res = {key: value for key,
+               value in graph[i].items() if value == temp}
     return res
 
 
+def dijkstra(graph):
+    return graph
+
+
 def main():
-    graphLength = len(graph)
-    rowsPerThread = graphLength / size
-    startRow = int(rowsPerThread * rank)
-    endRow = int(rowsPerThread * (rank + 1))
-    part = []
-    distance = []
-    # nodes = ['a', 'b', 'c', 'd']
-    nodes = [0, 1, 2, 3]
-    d = []
-    for i in range(graphLength):
-        d.append(dict(zip(nodes, graph[i])))
+    rows_per_thread = len(matrix) / size
+    start_row = int(rows_per_thread * rank)
+    end_row = int(rows_per_thread * (rank + 1))
 
-    for i in range(graphLength):
-        part.append(dict(list(d[i].items())[startRow:endRow]))
-        a = findMinDistance(part[0])
+    graph_with_nodes = combine_with_nodes(matrix)
+    graph_per_pro = divide_graph(graph_with_nodes, start_row, end_row)
 
-    b = comm.allgather(a)
+    local_min = find_local_min(graph_per_pro[0])
 
-    for i in range(len(b)):
-        temp = min(b[i].values())
-        res = {key: val for key,
-               val in b[i].items() if val == temp}
+    combined_graph = comm.allgather(local_min)
+    global_min = find_global_min(combined_graph)
 
-    g = list(res.keys())[0]
-    k = list(res.values())[0]
-    n = part[g]
+    nearest_node = list(global_min.keys())[0]
+    distance = list(global_min.values())[0]
+    node_and_distance = graph_per_pro[nearest_node]
 
-    print(f'First: {n}\nSecond: {part}')
+    result = dijkstra(graph_per_pro)
+    print(result)
 
-
+    # print(rank, nearest_node, distance, node_and_distance)
+    # print(f'Rank: {rank}\nFirst: {n}\nSecond: {part}\n')
 if __name__ == "__main__":
     main()
