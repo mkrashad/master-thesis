@@ -1,4 +1,3 @@
-from unittest import result
 from mpi4py import MPI
 
 # Global variables
@@ -74,7 +73,17 @@ def main():
     node_and_distance = graph_per_pro[nearest_node]
 
     result = dijkstra(graph_per_pro)
-    print(result)
+    print("before", rank, node_and_distance, graph_per_pro)
+    dict_left, dicts = node_and_distance, graph_per_pro
+
+    for key in node_and_distance.keys():
+        for d in graph_per_pro:
+            num = node_and_distance[key] + 1
+            if num < d[key]:
+                d[key] = num
+
+    print("after", rank, node_and_distance, graph_per_pro)
+
 
     # print(rank, nearest_node, distance, node_and_distance)
     # print(f'Rank: {rank}\nFirst: {n}\nSecond: {part}\n')
