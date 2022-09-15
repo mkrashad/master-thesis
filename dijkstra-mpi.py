@@ -51,8 +51,16 @@ def find_global_min(graph):
     return res
 
 
-def dijkstra(graph):
-    return graph
+def dijkstra(global_min, graph_per_pro):
+    nearest_node = list(global_min.keys())[0]
+    nearest_distance = list(global_min.values())[0]
+    node_and_distance = graph_per_pro[nearest_node]
+    for key in node_and_distance.keys():
+        for item in graph_per_pro:
+            num = node_and_distance[key] + nearest_distance
+            if num < item[key]:
+                item[key] = num
+    return graph_per_pro
 
 
 def main():
@@ -68,24 +76,9 @@ def main():
     combined_graph = comm.allgather(local_min)
     global_min = find_global_min(combined_graph)
 
-    nearest_node = list(global_min.keys())[0]
-    distance = list(global_min.values())[0]
-    node_and_distance = graph_per_pro[nearest_node]
-
-    result = dijkstra(graph_per_pro)
-    print("before", rank, node_and_distance, graph_per_pro)
-    dict_left, dicts = node_and_distance, graph_per_pro
-
-    for key in node_and_distance.keys():
-        for d in graph_per_pro:
-            num = node_and_distance[key] + 1
-            if num < d[key]:
-                d[key] = num
-
-    print("after", rank, node_and_distance, graph_per_pro)
+    result = dijkstra(global_min, graph_per_pro)
+    print(result)
 
 
-    # print(rank, nearest_node, distance, node_and_distance)
-    # print(f'Rank: {rank}\nFirst: {n}\nSecond: {part}\n')
 if __name__ == "__main__":
     main()
